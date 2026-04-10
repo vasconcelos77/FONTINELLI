@@ -581,12 +581,12 @@ export default function App() {
               <span className="text-yellow-500">EXPERIÊNCIA</span>
             </h2>
             
-            <p className="text-slate-600 text-lg md:text-2xl max-w-2xl mx-auto font-medium mb-0">
+            <p className="text-slate-600 text-lg md:text-2xl max-w-2xl mx-auto font-medium mb-4 md:mb-0">
               Garanta seu acesso agora e leve esses <span className="text-slate-900 font-black">6 BÔNUS PREMIUM</span> de presente.
             </p>
           </div>
 
-          <div className="-mt-8 md:-mt-10">
+          <div className="mt-2 md:-mt-10">
             <BonusCarousel />
           </div>
 
@@ -619,7 +619,7 @@ export default function App() {
             <div className="bg-white rounded-2xl p-8 border border-gray-200 relative shadow-sm">
               <h3 className="text-xl font-bold text-center mb-6 text-slate-600">Pacote Básico</h3>
               <ul className="space-y-4 mb-8 text-sm text-slate-600">
-                <li className="flex items-center gap-2"><CheckCircle2 size={18} className="text-gray-400" /> +100 Dinâmicas de Geografia</li>
+                <li className="flex items-center gap-2"><CheckCircle2 size={18} className="text-gray-400" /> +100 Dinâmicas de História</li>
                 <li className="flex items-center gap-2"><CheckCircle2 size={18} className="text-gray-400" /> Garantia de 7 dias</li>
                 <li className="flex items-center gap-2"><CheckCircle2 size={18} className="text-gray-400" /> Acesso vitalício</li>
               </ul>
@@ -668,7 +668,7 @@ export default function App() {
                   {/* Benefits List above Bonuses */}
                   <ul className="space-y-4 px-2">
                     {[
-                      "+250 Dinâmicas Interativas de Geografia PDF",
+                      "+250 Dinâmicas Interativas de História PDF",
                       "Acesso imediato após a compra",
                       "Compatível com BNCC",
                       "Acesso Vitalício",
