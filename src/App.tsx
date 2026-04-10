@@ -239,8 +239,8 @@ function BonusCarousel() {
   };
 
   return (
-    <div className="relative max-w-lg mx-auto px-4 py-4">
-      <div className="relative h-[380px] flex items-center justify-center overflow-hidden">
+    <div className="relative max-w-lg mx-auto px-4 py-0">
+      <div className="relative h-[320px] flex items-start justify-center overflow-hidden">
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
             key={currentIndex}
@@ -320,7 +320,7 @@ function BonusCarousel() {
       </div>
 
       {/* Dots Indicator */}
-      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 z-10 flex gap-1.5">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-1.5">
         {bonuses.map((_, i) => (
           <div 
             key={i} 
@@ -329,6 +329,71 @@ function BonusCarousel() {
         ))}
       </div>
     </div>
+  );
+}
+
+function SocialProofToast() {
+  const names = ['Miguel', 'Arthur', 'Gael', 'Heitor', 'Theo', 'Davi', 'Gabriel', 'Bernardo', 'Samuel', 'João'];
+  const states = ['SP', 'RJ', 'MG', 'BA', 'PR', 'RS', 'PE', 'CE', 'PA', 'SC'];
+  const plans = ['Plano Premium VIP', 'Plano Básico'];
+
+  const [isVisible, setIsVisible] = useState(false);
+  const [data, setData] = useState({ name: '', state: '', plan: '', time: 0 });
+
+  useEffect(() => {
+    const showNotification = () => {
+      const randomName = names[Math.floor(Math.random() * names.length)];
+      const randomState = states[Math.floor(Math.random() * states.length)];
+      const randomPlan = plans[Math.floor(Math.random() * plans.length)];
+      const randomTime = Math.floor(Math.random() * 20) + 1;
+
+      setData({ name: randomName, state: randomState, plan: randomPlan, time: randomTime });
+      setIsVisible(true);
+
+      // Hide after 3 seconds
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 3000);
+    };
+
+    // Initial delay
+    const initialTimeout = setTimeout(showNotification, 3000);
+
+    // Cycle every 12 seconds
+    const interval = setInterval(showNotification, 12000);
+
+    return () => {
+      clearTimeout(initialTimeout);
+      clearInterval(interval);
+    };
+  }, []);
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: -20, opacity: 0 }}
+          className="fixed bottom-4 left-4 z-[100] flex items-center gap-2.5 bg-white/95 backdrop-blur-sm border border-gray-100 p-2.5 rounded-xl shadow-xl max-w-[240px] md:max-w-[260px]"
+        >
+          <div className="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-md shadow-green-500/10">
+            <CheckCircle2 className="text-white w-5 h-5" />
+          </div>
+          <div className="flex-grow min-w-0">
+            <p className="text-[11px] md:text-xs font-bold text-slate-900 truncate">
+              {data.name} ({data.state})
+            </p>
+            <p className="text-[10px] text-slate-600 leading-tight">
+              acabou de comprar <span className="text-green-600 font-bold">{data.plan}</span>
+            </p>
+            <p className="text-[9px] text-gray-400 mt-0.5">
+              há {data.time} minutos
+            </p>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -396,6 +461,7 @@ export default function App() {
               title="Demonstração do material" 
               allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
               frameBorder="0" 
+              loading="lazy"
               className={`w-full h-full absolute top-0 left-0 transition-opacity duration-300 ${isVideoPlaying ? 'opacity-100 z-10' : 'opacity-[0.01] z-20'}`} 
             />
             
@@ -404,6 +470,8 @@ export default function App() {
                 <img 
                   src="https://vumbnail.com/1181801432.jpg" 
                   alt="Video thumbnail" 
+                  loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 w-full h-full object-cover opacity-80 -z-10"
                 />
                 <div className="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(250,204,21,0.6)] group-hover:scale-110 transition-transform duration-300">
@@ -495,32 +563,34 @@ export default function App() {
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1, delay: 0.6 }}
-            className="w-24 h-1 bg-yellow-400 mx-auto mt-12 rounded-full"
+            className="w-24 h-1 bg-yellow-400 mx-auto mt-6 rounded-full"
           />
         </div>
       </section>
 
       {/* Bônus Section */}
-      <section className="py-12 md:py-24 px-4 bg-white text-slate-900 overflow-hidden relative">
+      <section className="pt-4 pb-8 md:pt-8 md:pb-16 px-4 bg-white text-slate-900 overflow-hidden relative">
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 px-8 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-8 shadow-lg">
+          <div className="text-center mb-2">
+            <div className="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 px-8 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-6 shadow-lg">
               🎁 PRESENTES EXCLUSIVOS
             </div>
             
-            <h2 className="text-5xl md:text-7xl font-black font-display mb-6 tracking-tighter uppercase leading-[0.9]">
+            <h2 className="text-5xl md:text-7xl font-black font-display mb-4 md:mb-6 tracking-tighter uppercase leading-[0.9]">
               TURBINE SUA <br className="hidden md:block" />
               <span className="text-yellow-500">EXPERIÊNCIA</span>
             </h2>
             
-            <p className="text-slate-600 text-lg md:text-2xl max-w-2xl mx-auto font-medium mb-12">
+            <p className="text-slate-600 text-lg md:text-2xl max-w-2xl mx-auto font-medium mb-0">
               Garanta seu acesso agora e leve esses <span className="text-slate-900 font-black">6 BÔNUS PREMIUM</span> de presente.
             </p>
           </div>
 
-          <BonusCarousel />
+          <div className="-mt-8 md:-mt-10">
+            <BonusCarousel />
+          </div>
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-8 md:mt-12">
             <div className="inline-block bg-slate-50 border border-slate-100 px-10 py-6 rounded-[32px] shadow-sm">
               <p className="text-slate-500 text-sm font-bold mb-2">
                 Total em Bônus: <span className="text-red-600 line-through ml-1">R$ 197,00</span>
@@ -535,7 +605,7 @@ export default function App() {
 
 
       {/* Oferta / Pricing */}
-      <section id="pricing" className="py-20 px-4 bg-gray-50">
+      <section id="pricing" className="py-12 md:py-20 px-4 bg-gray-50">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-black font-display mb-4">Escolha o <span className="text-green-600">pacote ideal</span> para as suas turmas</h2>
@@ -885,6 +955,7 @@ export default function App() {
           <p className="mt-2 text-xs opacity-60">Este produto é digital. Você receberá acesso por e-mail após o pagamento.</p>
         </div>
       </footer>
+      <SocialProofToast />
     </div>
   );
 }
