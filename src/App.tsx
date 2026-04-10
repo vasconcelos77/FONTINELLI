@@ -87,6 +87,8 @@ function TestimonialCarousel() {
         className="w-full h-auto opacity-0 pointer-events-none" 
         aria-hidden="true"
         referrerPolicy="no-referrer"
+        loading="lazy"
+        decoding="async"
       />
 
       <AnimatePresence initial={false} custom={direction}>
@@ -104,6 +106,8 @@ function TestimonialCarousel() {
           }}
           className="absolute top-0 left-0 w-full h-auto rounded-2xl shadow-xl border border-gray-100"
           referrerPolicy="no-referrer"
+          loading="lazy"
+          decoding="async"
         />
       </AnimatePresence>
 
@@ -423,6 +427,7 @@ export default function App() {
               className="wistia_embed w-full h-full" 
               name="wistia_embed" 
               id="wistia_u9pll71p3f"
+              loading="lazy"
             />
           </div>
 
@@ -828,6 +833,8 @@ export default function App() {
                   alt="Renata Andrade" 
                   className="w-full h-full rounded-full object-cover border-4 border-yellow-400 shadow-lg" 
                   referrerPolicy="no-referrer" 
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
 
