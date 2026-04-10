@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import Player from '@vimeo/player';
 import { 
   CheckCircle2, ShieldCheck, Lock, Package, Zap, Calendar, 
   Star, Smile, Target, Users, Download, School, Clock, 
@@ -334,8 +335,18 @@ function BonusCarousel() {
 export default function App() {
   const [isUpsellModalOpen, setIsUpsellModalOpen] = useState(false);
   const [isBonusExpanded, setIsBonusExpanded] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  useEffect(() => {
+    if (iframeRef.current) {
+      const player = new Player(iframeRef.current);
+      player.on('play', () => {
+        setIsVideoPlaying(true);
+      });
+    }
+  }, []);
 
   // Timer logic
   React.useEffect(() => {
@@ -354,45 +365,6 @@ export default function App() {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  React.useEffect(() => {
-    // Load Wistia main script
-    const script = document.createElement('script');
-    script.src = 'https://fast.wistia.net/assets/external/E-v1.js';
-    script.async = true;
-    document.body.appendChild(script);
-
-    // Load Video-specific JSONP for faster initialization
-    const jsonp = document.createElement('script');
-    jsonp.src = 'https://fast.wistia.com/embed/medias/u9pll71p3f.jsonp';
-    jsonp.async = true;
-    document.body.appendChild(jsonp);
-
-    return () => {
-      document.body.removeChild(script);
-      document.body.removeChild(jsonp);
-    }
-  }, []);
-
-  const handlePlay = () => {
-    setIsPlaying(true);
-    
-    // @ts-ignore
-    window._wq = window._wq || [];
-    // @ts-ignore
-    window._wq.push({
-      id: "u9pll71p3f",
-      onReady: (video: any) => {
-        video.unmute();
-        video.volume(1);
-        video.play();
-        // Force play again after a tiny delay to ensure it catches
-        setTimeout(() => {
-          video.play();
-        }, 300);
-      },
-    });
   };
 
   const today = new Date().toLocaleDateString('pt-BR');
@@ -416,19 +388,29 @@ export default function App() {
             Clique no vídeo abaixo para assistir oque você vai receber 👇🎥
           </p>
 
-          {/* Wistia Video Embed */}
-          <div className="relative max-w-sm mx-auto aspect-[9/16] bg-slate-800 rounded-xl overflow-hidden shadow-2xl mb-8 border-4 border-yellow-400">
+          {/* Vimeo Video Embed */}
+          <div className="relative max-w-sm mx-auto aspect-[9/16] bg-slate-800 rounded-xl overflow-hidden shadow-2xl mb-8 border-4 border-yellow-400 group">
             <iframe 
-              src="https://fast.wistia.net/embed/iframe/u9pll71p3f?videoFoam=true&autoPlay=false&silentAutoPlay=false&muted=false" 
+              ref={iframeRef}
+              src="https://player.vimeo.com/video/1181801432?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&api=1" 
               title="Demonstração do material" 
-              allow="autoplay; fullscreen" 
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
               frameBorder="0" 
-              scrolling="no" 
-              className="wistia_embed w-full h-full" 
-              name="wistia_embed" 
-              id="wistia_u9pll71p3f"
-              loading="lazy"
+              className={`w-full h-full absolute top-0 left-0 transition-opacity duration-300 ${isVideoPlaying ? 'opacity-100 z-10' : 'opacity-[0.01] z-20'}`} 
             />
+            
+            {!isVideoPlaying && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors pointer-events-none">
+                <img 
+                  src="https://vumbnail.com/1181801432.jpg" 
+                  alt="Video thumbnail" 
+                  className="absolute inset-0 w-full h-full object-cover opacity-80 -z-10"
+                />
+                <div className="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(250,204,21,0.6)] group-hover:scale-110 transition-transform duration-300">
+                  <Play className="w-10 h-10 text-slate-900 ml-2" fill="currentColor" />
+                </div>
+              </div>
+            )}
           </div>
 
           <button 
@@ -475,7 +457,7 @@ export default function App() {
       </section>
 
       {/* Respira Section */}
-      <section className="py-24 px-4 bg-white relative overflow-hidden">
+      <section className="py-12 md:py-24 px-4 bg-white relative overflow-hidden">
         {/* Decorative background element */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-yellow-100/30 rounded-full blur-3xl -z-10" />
         
@@ -519,7 +501,7 @@ export default function App() {
       </section>
 
       {/* Bônus Section */}
-      <section className="py-24 px-4 bg-white text-slate-900 overflow-hidden relative">
+      <section className="py-12 md:py-24 px-4 bg-white text-slate-900 overflow-hidden relative">
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 px-8 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-8 shadow-lg">
